@@ -14,9 +14,6 @@ on:
         required: true
         type: string
     secrets:
-      SONAR_TOKEN:
-        description: 'Token do SonarQube'
-        required: true
       GITHUB_TOKEN:
         description: 'Token do GitHub'
         required: true
