@@ -1,23 +1,26 @@
 on:
-    workflow_call:
-        inputs:
-            GITHUB_TOKEN:
-                description: 'Token do GitHub'
-                required: true
-                type: string
-            solution_name:
-                description: 'Nome da solução a ser compilada'
-                required: true
-                type: string
-            test_path:
-                description: 'Caminho para os testes'
-                required: true
-                type: string
-            exe_path:
-                description: 'Caminho para o executável'
-                required: true
-                type: string
-     # Run Save Artifacts windows
+  workflow_call:
+    inputs:
+      solution_name:
+        description: 'Nome da solução a ser compilada'
+        required: true
+        type: string
+      test_path:
+        description: 'Caminho para os testes'
+        required: true
+        type: string
+      exe_path:
+        description: 'Caminho para o executável'
+        required: true
+        type: string
+    secrets:
+      SONAR_TOKEN:
+        description: 'Token do SonarQube'
+        required: true
+      GITHUB_TOKEN:
+        description: 'Token do GitHub'
+        required: true
+
 jobs:
   release:
     runs-on: windows-latest
