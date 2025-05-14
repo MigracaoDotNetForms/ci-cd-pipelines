@@ -1,0 +1,21 @@
+
+    # # Run tests
+    # - name: Run tests
+    #   run: |
+    #     $dlls = Get-ChildItem -Path "Projeto_WindowsTeste\bin\Debug" -Filter "*.Tests.dll"
+    #     foreach ($dll in $dlls) {
+    #     & "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\Extensions\TestPlatform\vstest.console.exe" `
+    #       $dll.FullName `
+    #       /Logger:trx
+    #     }
+    #   shell: pwsh
+
+    # - name: Verificar arquivos gerados
+    #   run: dir Projeto_Windows\bin\Release /s
+    #   shell: cmd
+     #    # Run Save Artifacts
+    # - name: Save Artifacts
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: Projeto_WindowsTeste
+    #     path: Projeto_Windows\bin\Release

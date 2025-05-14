@@ -1,0 +1,52 @@
+on:
+  workflow_call:
+    inputs:
+      solution_name:
+        description: 'Nome da solução a ser compilada'
+        required: true
+        type: string
+      build_configuration:
+        description: 'Configuração de build (Debug ou Release)'
+        required: true
+        type: string
+    secrets:
+      SONAR_TOKEN:
+        description: 'Token do SonarQube'
+        required: true
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    # Checkout the code from the repository
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # Setup MSBuild
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    # Setup NuGet
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v2
+
+    - name: Oficial SonarQube Scan
+      uses: sonarsource/sonarqube-scan-action@v5.2.0
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      with:
+        args: >
+         -Dsonar.organization='migracaodotnetforms'
+         -Dsonar.projectKey=${{ github.event.repository.name }}
+         -Dsonar.verbose=true
+         -Dsonar.exclusions=**/bin/**/*,**/obj/**/*,**/packages/**/*,**/test/**/*
+
+    # Build the project
+    - name: Build solution
+      run: msbuild ${{inputs.solution_name}} /p:Configuration=${{inputs.build_configuration}} /p:Platform=${{BUILD_PLATFORM}} /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
+      continue-on-error: false
+
+
+   
+
