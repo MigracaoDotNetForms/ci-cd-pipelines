@@ -1,4 +1,3 @@
-needs: [build]
 
 on:
   workflow_call:
