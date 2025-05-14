@@ -44,7 +44,7 @@ jobs:
 
     # Build the project
     - name: Build solution
-      run: msbuild ${{inputs.solution_name}} /p:Configuration=${{inputs.build_configuration}} /p:Platform=${{BUILD_PLATFORM}} /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
+      run: msbuild ${{inputs.solution_name}} /p:Configuration=${{inputs.build_configuration}} 
       continue-on-error: false
 
 
