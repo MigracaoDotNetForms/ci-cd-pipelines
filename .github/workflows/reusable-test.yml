@@ -10,10 +10,6 @@ on:
             description: 'Configuração de build (Debug ou Release)'
             required: true
             type: string
-    # vstest_path:
-    #     description: 'Caminho para o executável vstest.console.exe'
-    #     required: true
-    #     type: string
 jobs:
     test:
       runs-on: windows-latest
@@ -24,28 +20,3 @@ jobs:
 
       - name: Run tests
         run: dotnet test ${{inputs.test_path}} --configuration ${{inputs.build_configuration}}
-
-    #   - name: Run tests
-    #     run: |
-    #       $dlls = Get-ChildItem -Path "${{ inputs.test_path }}" -Filter "*.Tests.dll"
-    #       foreach ($dll in $dlls) {
-    #         & "${{ inputs.vstest_path }}" `
-    #           $dll.FullName `
-    #           /Logger:trx
-    #       }
-    #     shell: pwsh
-
-
-# Run tests
-#     - name: Run tests
-#       run: |
-#         $dlls = Get-ChildItem -Path "Projeto_WindowsTeste\bin\Debug" -Filter "*.Tests.dll"
-#         foreach ($dll in $dlls) {
-#         & "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\Extensions\TestPlatform\vstest.console.exe" `
-#           $dll.FullName `
-#           /Logger:trx
-#         }
-#       shell: pwsh
-
-#name: Run classlib tests
-#       run: dotnet test ./Projeto_ClassLibrary.Tests/Projeto_ClassLibrary.Tests.csproj --configuration Release
