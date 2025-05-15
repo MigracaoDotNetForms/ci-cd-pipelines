@@ -5,6 +5,11 @@ on:
         description: 'Caminho para o csproj'
         required: true
         type: string
+      project_workspace:
+        description: 'nome do diretório de trabalho'
+        required: true
+        type: string
+
 jobs:
   package-deploy:
     runs-on: windows-latest
@@ -25,6 +30,7 @@ jobs:
       # pack the NuGet package
     - name: Pack NuGet package
       run: |
+        cd ${{ inputs.project_workspace }}
         ./nuget.exe pack ${{ inputs.project_path }} -OutputDirectory ./nupkgs
 
       # Authenticate and Publish to GitHub Packages
