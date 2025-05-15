@@ -21,7 +21,7 @@ jobs:
       # pack the NuGet package
     - name: Pack NuGet package
       run: |
-        ./nuget.exe pack ${{ inputs.project_path }}-OutputDirectory ./nupkgs
+        ./nuget.exe pack ${{ inputs.project_path }} -OutputDirectory ./nupkgs
 
       # Authenticate and Publish to GitHub Packages
     - name: Authenticate and Publish to GitHub Packages
