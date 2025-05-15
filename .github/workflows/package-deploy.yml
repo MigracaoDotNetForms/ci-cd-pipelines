@@ -1,0 +1,33 @@
+on:
+  workflow_call:
+    inputs:
+      project_path:
+        description: 'Caminho para o csproj'
+        required: true
+        type: string
+jobs:
+  package-deploy:
+    runs-on: windows-latest
+    steps:
+      # Checkout the repository
+    - name: Download NuGet CLI
+      run: |
+         curl -L --fail https://dist.nuget.org/win-x86-commandline/latest/nuget.exe --output nuget.exe
+
+    #Verify NuGet Download
+    - name: Verify NuGet Download
+      run: dir nuget.exe
+
+      # pack the NuGet package
+    - name: Pack NuGet package
+      run: |
+        ./nuget.exe pack ${{ inputs.project_path }}-OutputDirectory ./nupkgs
+
+      # Authenticate and Publish to GitHub Packages
+    - name: Authenticate and Publish to GitHub Packages
+      run: |
+       nuget.exe sources add -Name "github" -Source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" -Username ${{ github.actor }} -Password ${{ secrets.GITHUB_TOKEN }}
+       nuget.exe push **/*.nupkg -Source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" -ApiKey ${{ secrets.GITHUB_TOKEN }} -SkipDuplicate
+      shell: pwsh
+      env:
+       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
