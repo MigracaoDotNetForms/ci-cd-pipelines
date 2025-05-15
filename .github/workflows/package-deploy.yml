@@ -17,6 +17,10 @@ jobs:
     #Verify NuGet Download
     - name: Verify NuGet Download
       run: dir nuget.exe
+     
+    # Cria diretótio de saída
+    - name: Criar diretório de saída
+      run: mkdir nupkgs
 
       # pack the NuGet package
     - name: Pack NuGet package
