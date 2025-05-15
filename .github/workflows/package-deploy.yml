@@ -26,10 +26,6 @@ jobs:
     #Verify NuGet Download
     - name: Verify NuGet Download
       run: dir nuget.exe
-     
-    # Cria diretótio de saída
-    - name: Criar diretório de saída
-      run: mkdir nupkgs
 
       # Build the project
     - name: Build solution
