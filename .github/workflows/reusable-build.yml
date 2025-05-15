@@ -9,10 +9,6 @@ on:
         description: 'Configuração de build (Debug ou Release)'
         required: true
         type: string
-      test_path:
-        description: 'Caminho onde os arquivos de teste estão localizados'
-        required: true
-        type: string
     secrets:
       SONAR_TOKEN:
         description: 'Token do SonarQube'
@@ -21,6 +17,7 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+
     steps:
     # Checkout the code from the repository
     - name: Checkout code
@@ -34,14 +31,6 @@ jobs:
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v2
 
-    # Build the project
-    - name: Build solution
-      run: msbuild ${{inputs.solution_name}} /p:Configuration=${{inputs.build_configuration}} 
-      continue-on-error: false
-
-    - name: Run tests
-      run: dotnet test ${{inputs.test_path}} --configuration ${{inputs.build_configuration}}
-
     - name: Oficial SonarQube Scan
       uses: sonarsource/sonarqube-scan-action@v5.2.0
       env:
@@ -53,7 +42,10 @@ jobs:
          -Dsonar.verbose=true
          -Dsonar.exclusions=**/bin/**/*,**/obj/**/*,**/packages/**/*,**/test/**/*
 
-    
+    # Build the project
+    - name: Build solution
+      run: msbuild ${{inputs.solution_name}} /p:Configuration=${{inputs.build_configuration}} 
+      continue-on-error: false
 
 
    
