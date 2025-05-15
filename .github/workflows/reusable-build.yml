@@ -9,6 +9,10 @@ on:
         description: 'Configuração de build (Debug ou Release)'
         required: true
         type: string
+      test_path:
+        description: 'Caminho onde os arquivos de teste estão localizados'
+        required: true
+        type: string
     secrets:
       SONAR_TOKEN:
         description: 'Token do SonarQube'
@@ -30,6 +34,9 @@ jobs:
     # Setup NuGet
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v2
+
+    - name: Run tests
+      run: dotnet test ${{inputs.test_path}} --configuration ${{inputs.build_configuration}}
 
     - name: Oficial SonarQube Scan
       uses: sonarsource/sonarqube-scan-action@v5.2.0
