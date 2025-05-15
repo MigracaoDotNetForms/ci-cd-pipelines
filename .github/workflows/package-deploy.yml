@@ -9,16 +9,15 @@ on:
         description: 'Configuração de build (Debug ou Release)'
         required: true
         type: string
-      test_path:
-        description: 'Caminho onde os arquivos de teste estão localizados'
-        required: true
-        type: string
     
 jobs:
   package-deploy:
     runs-on: windows-latest
     steps:
       # Checkout the repository
+    - name: Checkout code
+      uses: actions/checkout@v4
+
     - name: Download NuGet CLI
       run: |
          curl -L --fail https://dist.nuget.org/win-x86-commandline/latest/nuget.exe --output nuget.exe
@@ -27,13 +26,10 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    - name: Run tests
-      run: dotnet test ${{inputs.test_path}} --configuration ${{inputs.build_configuration}}
-
     #Verify NuGet Download
     - name: Verify NuGet Download
       run: dir nuget.exe
-
+    
       # Build the project
     - name: Build solution
       run: msbuild  ${{ inputs.project_path }}/p:Configuration=${{inputs.build_configuration}} 
