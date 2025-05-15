@@ -31,7 +31,6 @@ jobs:
     - name: Pack NuGet package
       run: |
         ./nuget.exe pack ${{ inputs.project_path }} -OutputDirectory ./nupkgs
-        working-directory: ${{ inputs.project_workspace }}
 
       # Authenticate and Publish to GitHub Packages
     - name: Authenticate and Publish to GitHub Packages
