@@ -9,7 +9,7 @@ on:
         description: 'Configuração de build (Debug ou Release)'
         required: true
         type: string
-    
+   
 jobs:
   package-deploy:
     runs-on: windows-latest
@@ -18,51 +18,33 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Debug - Show Inputs
-      run: |
-        echo "Project Path: ${{ inputs.project_path }}"
-        echo "Build Configuration: ${{ inputs.build_configuration }}"
-
     - name: Download NuGet CLI
       run: |
-        curl -L --fail https://dist.nuget.org/win-x86-commandline/latest/nuget.exe --output nuget.exe
+         curl -L --fail https://dist.nuget.org/win-x86-commandline/latest/nuget.exe --output nuget.exe
 
-    - name: Debug - Verify NuGet CLI Download
-      run: dir nuget.exe
-
-    # Setup MSBuild
+      # Setup MSBuild
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    # Build the project
+    #Verify NuGet Download
+    - name: Verify NuGet Download
+      run: dir nuget.exe
+   
+      # Build the project
     - name: Build solution
-      run: |
-        echo "Building project at: ${{ inputs.project_path }}"
-        msbuild ${{ inputs.project_path }} /p:Configuration=${{ inputs.build_configuration }}
+      run: msbuild  ${{ inputs.project_path }}/p:Configuration=${{inputs.build_configuration}}
       continue-on-error: false
-
-    - name: Debug - Verify Build Output
-      run: |
-        echo "Checking build output..."
-        dir ${{ inputs.project_path }}/bin/${{ inputs.build_configuration }}
-
-    # Pack the NuGet package
+     
+      # pack the NuGet package
     - name: Pack NuGet package
       run: |
-        echo "Packing NuGet package..."
-        ./nuget.exe pack ${{ inputs.project_path }} -Properties Configuration=${{ inputs.build_configuration }} -OutputDirectory ./nupkg -Build
+        ./nuget.exe pack ${{inputs.project_path}} -Properties Configuration=${{inputs.build_configuration}} -OutputDirectory ./nupkg -Build
 
-    - name: Debug - Verify NuGet Package
-      run: |
-        echo "Checking NuGet package output..."
-        dir ./nupkg
-
-    # Authenticate and Publish to GitHub Packages
+      # Authenticate and Publish to GitHub Packages
     - name: Authenticate and Publish to GitHub Packages
       run: |
-        echo "Authenticating and publishing to GitHub Packages..."
-        nuget.exe sources add -Name "github" -Source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" -Username ${{ github.actor }} -Password ${{ secrets.GITHUB_TOKEN }}
-        nuget.exe push **/*.nupkg -Source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" -ApiKey ${{ secrets.GITHUB_TOKEN }} -SkipDuplicate
+       nuget.exe sources add -Name "github" -Source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" -Username ${{ github.actor }} -Password ${{ secrets.GITHUB_TOKEN }}
+       nuget.exe push **/*.nupkg -Source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" -ApiKey ${{ secrets.GITHUB_TOKEN }} -SkipDuplicate
       shell: pwsh
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
