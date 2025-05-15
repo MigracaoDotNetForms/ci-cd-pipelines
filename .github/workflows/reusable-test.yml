@@ -1,21 +1,18 @@
-on:
-  workflow_call:
-    inputs:
-      test_path:
-        description: 'Caminho onde os arquivos de teste estão localizados'
-        required: true
-        type: string
-      build_configuration:
-        description: 'Configuração de build (Debug ou Release)'
-        required: true
-        type: string
+# on:
+#   workflow_call:
+#     inputs:
+     
+#       build_configuration:
+#         description: 'Configuração de build (Debug ou Release)'
+#         required: true
+#         type: string
 
-jobs:
-  test:
-    runs-on: windows-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+# jobs:
+#   test:
+#     runs-on: windows-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
 
-      - name: Run tests
-        run: dotnet test ${{ inputs.test_path }} --configuration ${{ inputs.build_configuration }}
+      
+
