@@ -32,7 +32,6 @@ jobs:
       run: msbuild  ${{ inputs.project_path }}/p:Configuration=${{inputs.build_configuration}} 
       continue-on-error: false
       
-
       # pack the NuGet package
     - name: Pack NuGet package
       run: |
