@@ -13,6 +13,10 @@ on:
         description: 'Caminho para o executável'
         required: true
         type: string
+    secrets:
+     GITHUB_TOKEN:
+      description: 'Token do GitHub'
+      required: true
 
 jobs:
   release:
