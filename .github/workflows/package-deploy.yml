@@ -9,6 +9,10 @@ on:
         description: 'Configuração de build (Debug ou Release)'
         required: true
         type: string
+      project_folder:
+        description: 'Pasta do projeto'
+        required: true
+        type: string
 
 jobs:
   package-deploy:
@@ -35,6 +39,7 @@ jobs:
     - name: Build solution
       run: msbuild /p:Configuration=${{inputs.build_configuration}} 
       continue-on-error: false
+      working-directory: ${{inputs.project_folder}}
 
 
       # pack the NuGet package
