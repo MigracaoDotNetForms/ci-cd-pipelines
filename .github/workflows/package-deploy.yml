@@ -5,6 +5,14 @@ on:
         description: 'Caminho para o csproj'
         required: true
         type: string
+      solution_name:
+        description: 'Nome da solução a ser compilada'
+        required: true
+        type: string
+      build_configuration:
+        description: 'Configuração de build (Debug ou Release)'
+        required: true
+        type: string
 
 jobs:
   package-deploy:
@@ -15,6 +23,10 @@ jobs:
       run: |
          curl -L --fail https://dist.nuget.org/win-x86-commandline/latest/nuget.exe --output nuget.exe
 
+      # Setup MSBuild
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
     #Verify NuGet Download
     - name: Verify NuGet Download
       run: dir nuget.exe
@@ -23,10 +35,16 @@ jobs:
     - name: Criar diretório de saída
       run: mkdir nupkgs
 
+      # Build the project
+    - name: Build solution
+      run: msbuild ${{inputs.solution_name}} /p:Configuration=${{inputs.build_configuration}} 
+      continue-on-error: false
+
+
       # pack the NuGet package
     - name: Pack NuGet package
       run: |
-        ./nuget.exe pack ${{inputs.project_path}} -Properties Configuration=Release -OutputDirectory ./nupkg -Build
+        ./nuget.exe pack ${{inputs.project_path}} -Properties Configuration=${{inputs.build_configuration}} -OutputDirectory ./nupkg -Build
 
       # Authenticate and Publish to GitHub Packages
     - name: Authenticate and Publish to GitHub Packages
