@@ -6,7 +6,7 @@ on:
         required: true
         type: string
       working-directory:
-        description: 'nome d'
+        description: 'nome do diretorio de trabalho'
         required: true
         type: string
 
@@ -30,8 +30,8 @@ jobs:
       # pack the NuGet package
     - name: Pack NuGet package
       run: |
-        working-directory: ${{ inputs.project_workspace }}
         ./nuget.exe pack ${{ inputs.project_path }} -OutputDirectory ./nupkgs
+        working-directory: ${{ inputs.project_workspace }}
 
       # Authenticate and Publish to GitHub Packages
     - name: Authenticate and Publish to GitHub Packages
