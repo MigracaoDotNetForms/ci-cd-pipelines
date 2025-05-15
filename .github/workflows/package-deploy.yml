@@ -5,10 +5,6 @@ on:
         description: 'Caminho para o csproj'
         required: true
         type: string
-      working-directory:
-        description: 'nome do diretorio de trabalho'
-        required: true
-        type: string
 
 jobs:
   package-deploy:
