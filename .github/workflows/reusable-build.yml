@@ -61,7 +61,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ${{ inputs.solution_name }}
-        path: ./projects/**/bin/${{ inputs.build_configuration }}
+        path: ${{ inputs.test_path }}
 
 
 
