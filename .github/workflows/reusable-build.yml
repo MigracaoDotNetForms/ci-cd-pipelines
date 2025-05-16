@@ -36,7 +36,7 @@ jobs:
       run: |
         $testProjects = Get-ChildItem -Path . -Recurse -Filter "*.csproj" | Where-Object { $_.FullName -match "\.Tests\.csproj$" }
         foreach ($project in $testProjects) {
-          dotnet test $project.FullName --configuration Release
+          dotnet test $project.FullName --configuration=Release
         }
       shell: pwsh
 
