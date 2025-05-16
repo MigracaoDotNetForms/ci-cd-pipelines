@@ -1,9 +1,16 @@
 on:
   workflow_call:
+    inputs:
+      build_configuration:
+        description: 'Configuração de build (Debug ou Release)'
+        required: true
+        default: 'Release'
+        type: string
     secrets:
       SONAR_TOKEN:
         description: 'Token do SonarQube'
         required: true
+      
 
 jobs:
   build:
@@ -25,15 +32,16 @@ jobs:
         if ($null -eq $solution) {
           Write-Error "Nenhum arquivo .sln encontrado no repositório."
         }
-        msbuild $solution.FullName /p:Configuration=Release
+        msbuild $solution.FullName /p:Configuration=${{ inputs.build_configuration }}
+      shell: pwsh
       continue-on-error: false
-    
+
     # Run unit tests
     - name: Run tests
       run: |
         $testProjects = Get-ChildItem -Path . -Recurse -Filter "*.csproj" | Where-Object { $_.FullName -match "\.Tests\.csproj$" }
         foreach ($project in $testProjects) {
-          dotnet test $project.FullName --configuration=Release
+          dotnet test $project.FullName --configuration=${{ inputs.build_configuration }}
         }
       shell: pwsh
 
@@ -41,6 +49,7 @@ jobs:
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v2
 
+    # Oficial SonarQube Scan
     - name: Oficial SonarQube Scan
       uses: sonarsource/sonarqube-scan-action@v5.2.0
       env:
@@ -52,11 +61,25 @@ jobs:
          -Dsonar.verbose=true
          -Dsonar.exclusions=**/bin/**/*,**/obj/**/*,**/packages/**/*,**/test/**/*
 
+    # Save Artifacts
     - name: Save Artifacts
+      run: |
+        $buildPaths = Get-ChildItem -Path . -Recurse -Directory -Filter "bin" | ForEach-Object {
+          if (Test-Path "$($_.FullName)\${{ inputs.build_configuration }}") {
+            "$($_.FullName)\${{ inputs.build_configuration }}"
+          }
+        }
+        if (-not $buildPaths) {
+          Write-Error "Nenhum diretório de build encontrado em 'bin/${{ inputs.build_configuration }}'."
+        }
+        $buildPaths -join "`n" | Out-File -FilePath $env:GITHUB_ENV -Append
+      shell: pwsh
+
+    - name: Upload Build Artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: Save  Build-Artifacts
-        path: 
+        name: Build-Artifacts
+        path: ${{ env.BUILD_PATH }}
 
 
 
