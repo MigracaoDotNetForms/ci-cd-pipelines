@@ -5,11 +5,6 @@ on:
         description: 'Caminho para o csproj'
         required: true
         type: string
-      build_configuration:
-        description: 'Configuração de build (Debug ou Release)'
-        required: true
-        type: string
-      
    
 jobs:
   package-deploy:
@@ -36,13 +31,13 @@ jobs:
    
       # Build the project
     - name: Build solution
-      run: msbuild  ${{ inputs.project_path }} /p:Configuration=${{inputs.build_configuration}}
+      run: msbuild  ${{ inputs.project_path }} /p:Configuration=Release
       continue-on-error: false
      
       # pack the NuGet package
     - name: Pack NuGet package
       run: |
-        ./nuget.exe pack ${{inputs.project_path}} -Properties Configuration=${{inputs.build_configuration}} -OutputDirectory ./nupkg -Build
+        ./nuget.exe pack ${{inputs.project_path}} -Properties Configuration=Release -OutputDirectory ./nupkg -Build
 
       # Authenticate and Publish to GitHub Packages
     - name: Authenticate and Publish to GitHub Packages
