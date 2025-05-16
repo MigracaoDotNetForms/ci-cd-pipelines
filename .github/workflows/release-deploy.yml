@@ -5,10 +5,6 @@ on:
         description: 'Nome da solução a ser compilada'
         required: true
         type: string
-      test_path:
-        description: 'Caminho para os testes'
-        required: true
-        type: string
       exe_path:
         description: 'Caminho para o executável'
         required: true
