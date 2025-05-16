@@ -1,10 +1,6 @@
 on:
   workflow_call:
     inputs:
-      build_configuration:
-        description: 'Configuração de build (Debug ou Release)'
-        required: true
-        type: string
     secrets:
       SONAR_TOKEN:
         description: 'Token do SonarQube'
