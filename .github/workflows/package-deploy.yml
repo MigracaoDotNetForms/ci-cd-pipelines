@@ -30,6 +30,9 @@ jobs:
     #Verify NuGet Download
     - name: Verify NuGet Download
       run: dir nuget.exe
+
+    - name: Debug - print project path
+      run: echo "Project path is ${{ inputs.project_path }}"
    
       # Build the project
     - name: Build solution
