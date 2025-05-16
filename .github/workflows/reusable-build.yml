@@ -1,5 +1,6 @@
 on:
   workflow_call:
+    inputs:
     secrets:
       SONAR_TOKEN:
         description: 'Token do SonarQube'
@@ -37,19 +38,6 @@ jobs:
         }
       shell: pwsh
 
-    # Find MSBuild Output
-    - name: Find MSBuild Output
-      run: |
-        $binPaths = Get-ChildItem -Path . -Recurse -Directory -Filter "bin"
-        if ($binPaths) {
-          foreach ($path in $binPaths) {
-            Write-Host "Binário encontrado em: $($path.FullName)"
-          }
-        } else {
-          Write-Error "Nenhum diretório 'bin' encontrado no repositório."
-        }
-      shell: pwsh
-
     # Setup NuGet
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v2
@@ -69,7 +57,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: Save  Build-Artifacts
-        path: /bin/release
+        path: 
 
 
 
