@@ -9,6 +9,10 @@ on:
         description: 'Configuração de build (Debug ou Release)'
         required: true
         type: string
+      test_path: 
+        description: 'Caminho para os testes a serem executados'
+        required: true
+        type: string
     secrets:
       SONAR_TOKEN:
         description: 'Token do SonarQube'
