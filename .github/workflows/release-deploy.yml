@@ -15,6 +15,14 @@ jobs:
     runs-on: windows-latest
     steps:
 
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifact
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
