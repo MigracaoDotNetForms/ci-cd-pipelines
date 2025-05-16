@@ -27,9 +27,14 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-      # Build the project
+    # Build the project
     - name: Build solution
-      run: msbuild ${{inputs.solution_name}} /p:Configuration=Release
+      run: |
+        $solution = Get-ChildItem -Path . -Recurse -Filter "*.sln" | Select-Object -First 1
+        if ($null -eq $solution) {
+          Write-Error "Nenhum arquivo .sln encontrado no repositório."
+        }
+        msbuild $solution.FullName /p:Configuration=Release
       continue-on-error: false
     
     - name: Run tests
