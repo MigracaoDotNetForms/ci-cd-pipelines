@@ -9,6 +9,10 @@ on:
         description: 'Configuração de build (Debug ou Release)'
         required: true
         type: string
+      test_path:
+        description: 'Caminho onde os arquivos de teste estão localizados'
+        required: true
+        type: string
     secrets:
       SONAR_TOKEN:
         description: 'Token do SonarQube'
@@ -32,14 +36,13 @@ jobs:
       run: msbuild ${{inputs.solution_name}} /p:Configuration=${{inputs.build_configuration}} 
       continue-on-error: false
     
-    # Run tests
     - name: Run tests
       run: |
-        $dlls = Get-ChildItem -Path . -Filter "*.Tests.dll" -Recurse
-        foreach ($dll in $dlls) {
-        & "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\Extensions\TestPlatform\vstest.console.exe" `
-        $dll.FullName `
-        /Logger:trx
+        $testDlls = Get-ChildItem -Path . -Recurse -Filter "*.Tests.dll"
+        foreach ($dll in $testDlls) {
+          & "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\Extensions\TestPlatform\vstest.console.exe" `
+          $dll.FullName `
+          /Logger:trx
         }
       shell: pwsh
 
@@ -62,9 +65,9 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ${{ inputs.solution_name }}
-        path: ./bin/${{ inputs.build_configuration }}
-    
+        path: ${{ inputs.test_path }}
 
 
-   
+
+
 
