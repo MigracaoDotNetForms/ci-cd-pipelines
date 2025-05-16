@@ -54,6 +54,11 @@ jobs:
          -Dsonar.verbose=true
          -Dsonar.exclusions=**/bin/**/*,**/obj/**/*,**/packages/**/*,**/test/**/*
 
+    - name: Save Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.solution_name }}
+        path: ${{ inputs.test_path }}
     
 
 
