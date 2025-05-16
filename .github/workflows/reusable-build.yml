@@ -36,8 +36,16 @@ jobs:
       run: msbuild ${{inputs.solution_name}} /p:Configuration=${{inputs.build_configuration}} 
       continue-on-error: false
     
+    # Run tests
     - name: Run tests
-      run: dotnet test ${{ inputs.test_path }} --configuration ${{ inputs.build_configuration }}
+      run: |
+        $dlls = Get-ChildItem -Path . -Filter "*.Tests.dll" -Recurse
+        foreach ($dll in $dlls) {
+        & "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\Extensions\TestPlatform\vstest.console.exe" `
+        $dll.FullName `
+        /Logger:trx
+        }
+      shell: pwsh
 
     # Setup NuGet
     - name: Setup NuGet
