@@ -1,6 +1,5 @@
 on:
   workflow_call:
-    inputs:
     secrets:
       SONAR_TOKEN:
         description: 'Token do SonarQube'
