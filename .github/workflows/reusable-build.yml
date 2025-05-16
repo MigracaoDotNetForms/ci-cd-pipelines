@@ -61,8 +61,8 @@ jobs:
          -Dsonar.verbose=true
          -Dsonar.exclusions=**/bin/**/*,**/obj/**/*,**/packages/**/*,**/test/**/*
 
-    # Save Artifacts
     - name: Save Artifacts
+      id: save_artifacts
       run: |
         $buildPaths = Get-ChildItem -Path . -Recurse -Directory -Filter "bin" | ForEach-Object {
           if (Test-Path "$($_.FullName)\${{ inputs.build_configuration }}") {
@@ -72,16 +72,15 @@ jobs:
         if (-not $buildPaths) {
           Write-Error "Nenhum diretório de build encontrado em 'bin/${{ inputs.build_configuration }}'."
         }
-        $buildPaths -join "`n" | Out-File -FilePath $env:GITHUB_ENV -Append
+        $buildPath = $buildPaths[0]
+        echo "build_path=$buildPath" >> $env:GITHUB_OUTPUT
       shell: pwsh
 
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: Build-Artifacts
-        path: ${{ env.BUILD_PATH }}
-
-
+        path: ${{ steps.save_artifacts.outputs.build_path }}
 
 
 
