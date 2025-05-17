@@ -14,11 +14,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Download build artifacts
+      - name: Download Build Artifacts
         uses: actions/download-artifact@v4
         with:
-          name: dowload-artifact
-          path: ./artifacts
+          name: Build-Artifacts
+          path: ./artifact
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
