@@ -17,8 +17,8 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: build-artifact
-          path: ./artifact
+          name: dowload-artifact
+          path: ./artifacts
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
@@ -31,6 +31,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v1.0.0
-          files: ${{ inputs.exe_path }}
+          files: ./artifacts/
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
