@@ -61,6 +61,7 @@ jobs:
          -Dsonar.verbose=true
          -Dsonar.exclusions=**/bin/**/*,**/obj/**/*,**/packages/**/*,**/test/**/*
 
+    # Save artifacts
     - name: Save Artifacts
       id: save_artifacts
       run: |
