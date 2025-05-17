@@ -1,10 +1,5 @@
 on:
   workflow_call:
-    inputs:
-      exe_path:
-        description: 'Caminho para o executável'
-        required: true
-        type: string
 
 jobs:
   release:
