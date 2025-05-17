@@ -14,19 +14,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: download artifacts
-        uses: actions/download-artifact@v3
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
         with:
           name: build-artifact
-
-      - name: Find Executable
-        run: |
-          $exe = Get-ChildItem -Path . -Recurse -Filter *.exe | Where-Object { $_.FullName -notmatch '\\obj\\' } | Select-Object -First 1
-          if ($null -eq $exe) {
-            Write-Error "Nenhum executável encontrado!"
-          }
-          echo "EXE_PATH=$($exe.FullName)" >> $env:GITHUB_ENV
-        shell: pwsh
+          path: ./artifact
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
