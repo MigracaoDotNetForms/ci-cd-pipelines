@@ -1,9 +1,10 @@
 on:
   workflow_call:
     inputs:
-      project_path:
-        description: 'Caminho para o csproj'
+      build_configuration:
+        description: 'Configuração de build (Debug ou Release)'
         required: true
+        default: 'Release'
         type: string
    
 jobs:
