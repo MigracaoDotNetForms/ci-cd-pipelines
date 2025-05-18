@@ -62,26 +62,27 @@ jobs:
          -Dsonar.exclusions=**/bin/**/*,**/obj/**/*,**/packages/**/*,**/test/**/*
 
     # Save artifacts
-    - name: Save Artifacts
-      id: save_artifacts
+    - name: Zip all build outputs
       run: |
-        $buildPaths = Get-ChildItem -Path . -Recurse -Directory -Filter "bin" | ForEach-Object {
-          if (Test-Path "$($_.FullName)\${{ inputs.build_configuration }}") {
-            "$($_.FullName)\${{ inputs.build_configuration }}"
-          }
+        $zipPath = "build-artifacts.zip"
+        $outputDirs = Get-ChildItem -Path . -Recurse -Directory -Filter "bin" | ForEach-Object {
+          "$($_.FullName)\${{ inputs.build_configuration }}"
+        } | Where-Object { Test-Path $_ }
+
+        if (-not $outputDirs) {
+          Write-Error "Nenhum diretório de build encontrado."
         }
-        if (-not $buildPaths) {
-          Write-Error "Nenhum diretório de build encontrado em 'bin/${{ inputs.build_configuration }}'."
-        }
-        $buildPath = $buildPaths[0]
-        echo "build_path=$buildPath" >> $env:GITHUB_OUTPUT
+
+        Compress-Archive -Path $outputDirs -DestinationPath $zipPath
       shell: pwsh
 
+
+    # Upload artifacts
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: Build-Artifacts
-        path: ${{ steps.save_artifacts.outputs.build_path }}
+        path: build-artifacts.zip
 
 
 
