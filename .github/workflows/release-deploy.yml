@@ -1,5 +1,6 @@
 on:
   workflow_call:
+
 jobs:
   release:
     runs-on: windows-latest
@@ -14,17 +15,16 @@ jobs:
           name: Build-Artifacts
           path: ./artifacts
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: v1.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Verificar conteúdo da pasta artifacts
+        run: |
+          echo "Arquivos encontrados:"
+          dir artifacts /s
+        shell: cmd
 
-      - name: Upload release asset
+      - name: Create GitHub Release with Assets
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v1.0.0
-          files: ./artifacts/
+          files: artifacts/**/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
