@@ -1,6 +1,5 @@
 on:
   workflow_call:
-
 jobs:
   release:
     runs-on: windows-latest
@@ -13,7 +12,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: Build-Artifacts
-          path: ./artifact
+          path: ./csproj
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
