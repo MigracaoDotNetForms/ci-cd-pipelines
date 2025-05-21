@@ -49,6 +49,28 @@ jobs:
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v2
 
+    - name: Create SonarCloud Project (if not exists)
+      run: |
+          $headers = @{
+            "Authorization" = "Basic $([Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes("${{ secrets.SONAR_TOKEN }}:")))"
+          }
+          $body = @{
+            organization = "migracao-net"
+            project = "${{ github.event.repository.name }}"
+            name = "${{ github.event.repository.name }}"
+          }
+          try {
+            Invoke-RestMethod -Uri "https://sonarcloud.io/api/projects/create" -Method Post -Headers $headers -Body $body -ErrorAction Stop
+            Write-Host "Projeto criado no SonarCloud."
+          } catch {
+            if ($_.Exception.Response.StatusCode.value__ -eq 400) {
+              Write-Host "Projeto já existe no SonarCloud, seguindo..."
+            } else {
+              throw $_
+            }
+          }
+      shell: pwsh
+
     # Oficial SonarQube Scan
     - name: Oficial SonarQube Scan
       uses: sonarsource/sonarqube-scan-action@v5.2.0
