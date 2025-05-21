@@ -55,7 +55,7 @@ jobs:
             "Authorization" = "Basic $([Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes("${{ secrets.SONAR_TOKEN }}:")))"
           }
           $body = @{
-            organization = "migracao-net"
+            organization = "migracaodotnetforms"
             project = "${{ github.event.repository.name }}"
             name = "${{ github.event.repository.name }}"
           }
